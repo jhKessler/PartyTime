@@ -54,6 +54,12 @@ def format_month_strings(month_strings: list, all_months: list):
         monate_data_format.append(m_str)
     return monate_data_format
 
+def sort_months_fn(tpl: tuple):
+    """sort fn for months"""
+    month, year = tpl[0].split("-")
+    val = int(month) + int(year) ** 2
+    return val
+
 data = load_data(URL)
 # group by weekday
 data["weekday"] = pd.to_datetime(data["date"]).dt.weekday
@@ -67,7 +73,7 @@ data["unique_month_nr"] = data[["month_nr", "year"]].agg("-".join, axis=1)
 
 # get vaccinations per month
 nach_monat = dict(data.groupby("unique_month_nr")["dosen_differenz_zum_vortag"].sum())
-nach_monat = sorted(nach_monat.items(), key=lambda x: int(x[0].split("-")[0]) + int(x[0].split("-")[1]) ** 2)
+nach_monat = sorted(nach_monat.items(), key=sort_months_fn)
 for i in range(len(nach_monat)):
     nach_monat[i] = list(nach_monat[i])
     nach_monat[i][1] = int(nach_monat[i][1])
@@ -78,9 +84,9 @@ num_days = monthrange(int(last_year), int(last_month))[1]
 num_days_in = len(data.loc[data["unique_month_nr"] == nach_monat[-1][0]])
 month_estimation = int((nach_monat[-1][1] / num_days_in) * num_days)
 nach_monat[-1][1] = month_estimation
+
+# build list with all months that we have
 monate_data, nach_monat = zip(*nach_monat)
-
-
 all_months = get_month_list()
 monate_data_format = format_month_strings(monate_data, all_months)
 
@@ -105,7 +111,7 @@ polyn = np.poly1d(coeffs)
 geimpft = 0
 best_fit_func = []
 for i in range(100):
-    best_fit_func.append(np.round(polyn(i)))
+    best_fit_func.append(int(polyn(i)))
     geimpft += polyn(i)
     if geimpft > impfdosen_insgm:
         break
@@ -122,8 +128,10 @@ for i in range(1, len(best_fit_func)):
     monate_data_forecast.append(all_months[str(month_num)] + " " + str(year))
 today = datetime.date.today()
 max_month = month_num
+# make prediction
 alle_geimpft = datetime.date(max_year, month_num, 15).strftime("%Y-%m-%d")
 best_fit_func[0] = 0
+
 # save data to json
 data_dict = {
     "last_seven_days_total" : int(last_seven_days_total),
