@@ -28,11 +28,13 @@ export class StatsPageComponent implements OnInit {
       }]
     },
     legend: {
-      display: false
+      display: true,
+      labels: {
+        fontColor: 'white'
+      }
     },
     defaultColor: 'red'
   };
-  public lineChartLabels: Label[] = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
   public lineChartType: ChartType = 'line';
 
   constructor(public statsService: StatsService) { }
