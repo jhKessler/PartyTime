@@ -1,1 +1,14 @@
-<p>stats-page works!</p>
+<table *ngIf="statsService.data">
+  <tr>
+    <td>Einwohner Deutschland</td>
+    <td>{{statsService.data.einwohner_deutschland | number}}</td>
+  </tr>
+  <tr>
+    <td>Impfungen bisher</td>
+    <td>{{statsService.data.impfdosen_bisher | number}}</td>
+  </tr>
+  <tr>
+    <td>Impfdosen übrig</td>
+    <td>{{statsService.data.impfdosen_uebrig | number}}</td>
+  </tr>
+</table>

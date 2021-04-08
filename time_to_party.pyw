@@ -83,7 +83,8 @@ data_dict = {
     "genug_leute_geimpft": alle_geimpft,
     "impfungen_nach_wochentag_avg": list(nach_wochentag),
     "impfungen_nach_monat": nach_monat,
-    "impf_forecast": best_fit_func
+    "impf_forecast": best_fit_func,
+    "stand": today.strftime("%Y-%m-%d")
 }
 with open('frontend/src/assets/data.json', 'w') as f:
     json.dump(data_dict, f)

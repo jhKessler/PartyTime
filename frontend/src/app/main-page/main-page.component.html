@@ -11,8 +11,8 @@
     <div>Diskotheken öffnen in</div>
     <div class="final-date">{{daysLeft(statsService.data.genug_leute_geimpft)}} Tagen</div>
     <div class="small-text">
-      Am {{statsService.data.genug_leute_geimpft | date:'dd.MM.y'}} sollten mit einer Herdenimmunität von 75% und den
-      aktuellen Impfzahlen die Clubs wieder öffnen.
+      Am {{statsService.data.genug_leute_geimpft | date:'dd.MM.y'}} sollten mit einer Herdenimmunität von {{statsService.data.impfrate_herdenimmunitaet * 100}}% und den
+      aktuellen Impfzahlen die Clubs wieder öffnen. <small>(Stand {{statsService.data.stand | date: 'dd.MM.y'}})</small>
     </div>
   </div>
 </ng-container>
