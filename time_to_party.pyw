@@ -87,7 +87,7 @@ polyn = np.poly1d(coeffs)
 geimpft = 0
 best_fit_func = []
 for i in range(100):
-    best_fit_func.append(polyn(i))
+    best_fit_func.append(np.round(polyn(i)))
     geimpft += polyn(i)
     if geimpft > impfdosen_insgm:
         break
