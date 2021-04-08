@@ -1,8 +1,8 @@
 <ng-container *ngIf="statsService.data">
   <div style="display: block;">
     <canvas baseChart width="300"
-            [datasets]="[{data: statsService.data.impfungen_nach_monat, label: 'Tatsächliche Impfungen'}]"
-            [labels]="lineChartLabels"
+            [datasets]="[{data: statsService.data.impfungen_nach_monat, label: 'Tatsächliche Impfungen'}, {data: statsService.data.impf_forecast, label: 'Modeliert'}]"
+            [labels]="statsService.data.impf_forecast_monate"
             [options]="lineChartOptions"
             [chartType]="lineChartType">
     </canvas>
@@ -14,16 +14,16 @@
         <div class="right">{{statsService.data.einwohner_deutschland | number}}</div>
       </div>
       <div class="stats-entry">
+        <div class="left"><div class="title">Impfdosen</div><div class="subtitle">benötigt für Herdenimmunität <small>({{statsService.data.impfrate_herdenimmunitaet * 100}}%)</small></div></div>
+        <div class="right">{{statsService.data.dosen_fuer_herdenimmunitaet | number}}</div>
+      </div>
+      <div class="stats-entry">
         <div class="left"><div class="title">Impfungen</div><div class="subtitle">bisher</div></div>
         <div class="right">{{statsService.data.impfdosen_bisher | number}}</div>
       </div>
       <div class="stats-entry">
         <div class="left"><div class="title">Impfdosen</div><div class="subtitle">übrig</div></div>
         <div class="right">{{statsService.data.impfdosen_uebrig | number}}</div>
-      </div>
-      <div class="stats-entry">
-        <div class="left"><div class="title">Impfdosen</div><div class="subtitle">benötigt für Herdenimmunität <small>({{statsService.data.impfrate_herdenimmunitaet * 100}}%)</small></div></div>
-        <div class="right">{{statsService.data.dosen_fuer_herdenimmunitaet | number}}</div>
       </div>
     </div>
   </div>

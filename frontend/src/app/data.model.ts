@@ -11,5 +11,6 @@ export interface DataModel {
   impfungen_nach_wochentag: number[],
   impfungen_nach_monat: number[],
   impf_forecast: number[],
-  stand: Date
+  stand: Date,
+  impf_forecast_monate: string[]
 }
