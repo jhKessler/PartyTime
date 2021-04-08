@@ -70,11 +70,11 @@ last_seven_days_total = last_seven_days["dosen_differenz_zum_vortag"].sum()
 last_seven_days_avg = last_seven_days_total // 7
 
 # calculate how long it takes to vaccinate to herd immunity if vaccination rate stays like last 7 days
-einw = 83_000_000
+einw = 83000000
 impfrate_herdenimmunität = 0.75
 herdenimmunität_anz = einw * impfrate_herdenimmunität
 impfdosen_insgm = herdenimmunität_anz * 2
-verabreicht = 11_500_000 + 4_700_000
+verabreicht = 11500000 + 4700000
 impfdosen_übrig = impfdosen_insgm - verabreicht
 td = datetime.timedelta(days=impfdosen_übrig // int(last_seven_days_avg))
 today = datetime.date.today()
