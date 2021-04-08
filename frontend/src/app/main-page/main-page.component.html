@@ -1,7 +1,7 @@
 <ng-container *ngIf="statsService.data">
   <div>
     <canvas baseChart
-            [datasets]="[{ data: statsService.data.impfungen_nach_wochentag_avg, backgroundColor: 'rgba(255,255,255,0.5)' }]"
+            [datasets]="[{ data: statsService.data.impfungen_nach_wochentag, backgroundColor: 'rgba(255,255,255,0.5)' }]"
             [labels]="barChartLabels"
             [options]="barChartOptions"
             [chartType]="barChartType">
@@ -9,9 +9,9 @@
   </div>
   <div style="text-align: center; margin-top: 50px;" class="main-text">
     <div>Diskotheken öffnen in</div>
-    <div class="final-date">{{daysLeft(statsService.data.genug_leute_geimpft)}} Tagen</div>
+    <div class="final-date">{{daysLeft(statsService.data.wann_genug_leute_geimpft)}} Tagen</div>
     <div class="small-text">
-      Am {{statsService.data.genug_leute_geimpft | date:'dd.MM.y'}} sollten mit einer Herdenimmunität von {{statsService.data.impfrate_herdenimmunitaet * 100}}% und den
+      Am {{statsService.data.wann_genug_leute_geimpft | date:'dd.MM.y'}} sollten mit einer Herdenimmunität von {{statsService.data.impfrate_herdenimmunitaet * 100}}% und den
       aktuellen Impfzahlen die Clubs wieder öffnen. <small>(Stand {{statsService.data.stand | date: 'dd.MM.y'}})</small>
     </div>
   </div>

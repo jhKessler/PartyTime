@@ -1,13 +1,31 @@
-table {
-  border-collapse: collapse;
+.stats-list {
+  display: flex;
+  flex-direction: column;
+  width: 500px;
 
-  tr {
-    td:first-child {
-      width: 200px;
+  .stats-entry {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+
+    .left {
+      display: flex;
+      flex-direction: column;
+
+      .title {
+        font-size: 23px;
+      }
+
+      .subtitle {
+
+      }
     }
 
-    td:last-child {
-      text-align: right;
+    .right {
+      font-size: 30px;
+      font-weight: bold;
     }
   }
 }
