@@ -1,16 +1,18 @@
-<!--<div>
-  <canvas baseChart width="400" height="400"
-          [datasets]="lineChartData"
-          [labels]="lineChartLabels"
-          [options]="lineChartOptions"
-          [colors]="lineChartColors"
-          [legend]="lineChartLegend"
-          [chartType]="lineChartType"
-          [plugins]="lineChartPlugins">
-  </canvas>
-</div>-->
-<div style="text-align: center" class="main-text" *ngIf="statsService.data">
-  In Deutschland werden voraussichtlich am<br/>
-  <span class="final-date">{{statsService.data.genug_leute_geimpft}}</span><br/>
-  75% Menschen geimpft sein!
-</div>
+<ng-container *ngIf="statsService.data">
+  <div style="width:550px">
+    <canvas baseChart
+            [datasets]="[{ data: statsService.data.impfungen_nach_wochentag_avg, backgroundColor: 'rgba(255,255,255,0.5)' }]"
+            [labels]="barChartLabels"
+            [options]="barChartOptions"
+            [chartType]="barChartType">
+    </canvas>
+  </div>
+  <div style="text-align: center; margin-top: 50px;" class="main-text">
+    <div>Diskotheken öffnen in</div>
+    <div class="final-date">{{daysLeft(statsService.data.genug_leute_geimpft)}} Tagen</div>
+    <div class="small-text">
+      Am {{statsService.data.genug_leute_geimpft | date:'dd.MM.y'}} sollten mit einer Herdenimmunität von 75% und den
+      aktuellen Impfzahlen die Clubs wieder öffnen.
+    </div>
+  </div>
+</ng-container>

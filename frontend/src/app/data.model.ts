@@ -7,5 +7,6 @@ export interface DataModel {
   "dosen_fuer_herdenimmunitaet": number,
   "impfdosen_bisher": number,
   "impfdosen_uebrig": number,
-  "genug_leute_geimpft": Date
+  "genug_leute_geimpft": Date,
+  "impfungen_nach_wochentag_avg": number[]
 }
