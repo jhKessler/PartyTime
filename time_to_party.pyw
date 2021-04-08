@@ -28,6 +28,8 @@ data["unique_month_nr"] = data[["month_nr", "year"]].agg("-".join, axis=1)
 # get vaccinations per month
 nach_monat = dict(data.groupby("unique_month_nr")["dosen_differenz_zum_vortag"].sum())
 nach_monat = sorted(nach_monat.items(), key=lambda x: int(x[0].split("-")[0]) + int(x[0].split("-")[1]) ** 2)
+# get first month of data
+first_month = nach_monat[0][0]
 for i in range(len(nach_monat)):
     nach_monat[i] = list(nach_monat[i])
     nach_monat[i][1] = int(nach_monat[i][1])
@@ -81,6 +83,7 @@ data_dict = {
     "impfdosen_bisher": int(dosen_insgesamt),
     "impfdosen_uebrig": int(impfdosen_übrig),
     "wann_genug_leute_geimpft": alle_geimpft,
+    "impfungen_stats_erster_monat": first_month,
     "impfungen_nach_wochentag": list(nach_wochentag),
     "impfungen_nach_monat": nach_monat,
     "impf_forecast": best_fit_func,
