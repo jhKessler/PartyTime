@@ -17,7 +17,7 @@ with requests.Session() as s:
 
 # group by weekday
 data["weekday"] = pd.to_datetime(data["date"]).dt.weekday
-nach_wochentag = data.groupby("weekday")["dosen_differenz_zum_vortag"].mean().astype(int)
+nach_wochentag = data.groupby("weekday")["dosen_differenz_zum_vortag"].sum().astype(int)
 
 # group by month
 # get unique id for month
@@ -80,8 +80,8 @@ data_dict = {
     "dosen_fuer_herdenimmunitaet": int(impfdosen_insgm),
     "impfdosen_bisher": int(dosen_insgesamt),
     "impfdosen_uebrig": int(impfdosen_übrig),
-    "genug_leute_geimpft": alle_geimpft,
-    "impfungen_nach_wochentag_avg": list(nach_wochentag),
+    "wann_genug_leute_geimpft": alle_geimpft,
+    "impfungen_nach_wochentag": list(nach_wochentag),
     "impfungen_nach_monat": nach_monat,
     "impf_forecast": best_fit_func,
     "stand": today.strftime("%Y-%m-%d")
