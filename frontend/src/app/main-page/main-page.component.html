@@ -13,7 +13,8 @@
     <div class="final-date">{{daysLeft(statsService.data.wann_genug_leute_geimpft)}} Tagen</div>
     <div class="small-text">
       Am {{statsService.data.wann_genug_leute_geimpft | date:'dd.MM.y'}} sollten mit einer Herdenimmunität von {{statsService.data.impfrate_herdenimmunitaet * 100}}% und den
-      aktuellen Impfzahlen die Clubs wieder öffnen. <small>(Stand {{statsService.data.stand | date: 'dd.MM.y'}})</small>
+      aktuellen Impfzahlen die Clubs wieder öffnen. <small>(Stand {{statsService.data.stand | date: 'dd.MM.y'}})</small><br/>
+      <br/>Auf der <span style="cursor:Pointer" routerLink="stats">Statistik</span> Seite kannst du zurückverfolgen wie dieser Wert berechnet wurde.
     </div>
   </div>
 </ng-container>
