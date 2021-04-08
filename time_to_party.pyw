@@ -13,6 +13,9 @@ with requests.Session() as s:
     decoded_content = download.content.decode('utf-8')
     data = pd.read_csv(io.StringIO(decoded_content), delimiter="\t")
 
+data["weekday"] = pd.to_datetime(data["date"]).dt.weekday
+nach_wochentag = data.groupby("weekday")["dosen_differenz_zum_vortag"].mean().astype(int)
+
 last_seven_days = data.iloc[-7:]
 dosen_insgesamt = data.iloc[-1]["dosen_kumulativ"]
 last_seven_days_total = last_seven_days["dosen_differenz_zum_vortag"].sum()
@@ -38,7 +41,8 @@ data_dict = {
     "dosen_fuer_herdenimmunitaet": int(impfdosen_insgm),
     "impfdosen_bisher": int(dosen_insgesamt),
     "impfdosen_uebrig": int(impfdosen_übrig),
-    "genug_leute_geimpft": alle_geimpft
+    "genug_leute_geimpft": alle_geimpft,
+    "impfungen_nach_wochentag_avg": list(nach_wochentag)
 }
 
 with open('frontend/src/assets/data.json', 'w') as f:
