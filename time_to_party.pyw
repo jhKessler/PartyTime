@@ -7,14 +7,54 @@ import datetime
 import json
 from calendar import monthrange
 
-CSV_URL = 'https://impfdashboard.de/static/data/germany_vaccinations_timeseries_v2.tsv'
+URL = 'https://impfdashboard.de/static/data/germany_vaccinations_timeseries_v2.tsv'
 
-# load data
-with requests.Session() as s:
-    download = s.get(CSV_URL)
-    decoded_content = download.content.decode('utf-8')
-    data = pd.read_csv(io.StringIO(decoded_content), delimiter="\t")
+def load_data(url: str):
+    """Loads data from url"""
+    with requests.Session() as s:
+        download = s.get(url)
+        decoded_content = download.content.decode('utf-8')
+        data = pd.read_csv(io.StringIO(decoded_content), delimiter="\t")
+    return data
 
+def save_data(data: dict):
+    """Save data to json file"""
+    with open('frontend/src/assets/data.json', 'w') as f:
+        json.dump(data, f)
+
+def get_month_list(reverse=False):
+    all_months = [
+    (1, 'Januar'),
+    (2, 'Februar'),
+    (3, 'März'),
+    (4, 'April'),
+    (5, 'Mai'),
+    (6, 'Juni'),
+    (7, 'Juli'),
+    (8, 'August'),
+    (9, 'September'),
+    (10, 'Oktober'),
+    (11, 'November'),
+    (12, 'Dezember'),
+    ]
+    if not reverse:
+        month = {str(month_num): month_name for month_num, month_name in all_months}
+    else:
+        month = {month_name: str(month_num) for month_num, month_name in all_months}
+    return month
+
+def format_month_strings(month_strings: list, all_months: list):
+    """Formats month numbers to corresponding month names"""
+    monate_data_format = []
+    for m in monate_data:
+        m_str = ""
+        month_num = m.split("-")[0]
+        m_str += all_months[month_num]
+        m_str +=  " " + m.split("-")[1]
+        monate_data_format.append(m_str)
+    return monate_data_format
+
+data = load_data(URL)
 # group by weekday
 data["weekday"] = pd.to_datetime(data["date"]).dt.weekday
 nach_wochentag = data.groupby("weekday")["dosen_differenz_zum_vortag"].sum().astype(int)
@@ -39,29 +79,10 @@ num_days_in = len(data.loc[data["unique_month_nr"] == nach_monat[-1][0]])
 month_estimation = int((nach_monat[-1][1] / num_days_in) * num_days)
 nach_monat[-1][1] = month_estimation
 monate_data, nach_monat = zip(*nach_monat)
-# format month string
-monate_data_format = []
-all_months = reversed([
-    (1, 'Januar'),
-    (2, 'Februar'),
-    (3, 'März'),
-    (4, 'April'),
-    (5, 'Mai'),
-    (6, 'Juni'),
-    (7, 'Juli'),
-    (8, 'August'),
-    (9, 'September'),
-    (10, 'Oktober'),
-    (11, 'November'),
-    (12, 'Dezember'),
-])
-all_months = {str(month_num): month_name for month_num, month_name in all_months}
-for m in monate_data:
-    m_str = ""
-    month_num = m.split("-")[0]
-    m_str += all_months[month_num]
-    m_str +=  " " + m.split("-")[1]
-    monate_data_format.append(m_str)
+
+
+all_months = get_month_list()
+monate_data_format = format_month_strings(monate_data, all_months)
 
 # get vaccinations of last 7 days
 last_seven_days = data.iloc[-7:]
@@ -74,11 +95,8 @@ einw = 83000000
 impfrate_herdenimmunität = 0.75
 herdenimmunität_anz = einw * impfrate_herdenimmunität
 impfdosen_insgm = herdenimmunität_anz * 2
-verabreicht = 11500000 + 4700000
+verabreicht = data["dosen_kumulativ"].max()
 impfdosen_übrig = impfdosen_insgm - verabreicht
-td = datetime.timedelta(days=impfdosen_übrig // int(last_seven_days_avg))
-today = datetime.date.today()
-alle_geimpft = (today + td).strftime("%Y-%m-%d")
 
 # find best fit line to estimate vaccination progression
 coeffs = np.polyfit(range(len(nach_monat)), nach_monat, deg=2)
@@ -91,7 +109,6 @@ for i in range(100):
     geimpft += polyn(i)
     if geimpft > impfdosen_insgm:
         break
-best_fit_func[0] = 0
 
 max_year = data["year"].astype(int).max()
 monate_data_forecast = ["Dezember 2020"]
@@ -103,6 +120,10 @@ for i in range(1, len(best_fit_func)):
         month_num = 12
         year += 1
     monate_data_forecast.append(all_months[str(month_num)] + " " + str(year))
+today = datetime.date.today()
+max_month = month_num
+alle_geimpft = datetime.date(max_year, month_num, 15).strftime("%Y-%m-%d")
+best_fit_func[0] = 0
 # save data to json
 data_dict = {
     "last_seven_days_total" : int(last_seven_days_total),
@@ -121,6 +142,6 @@ data_dict = {
     "impf_forecast_monate": monate_data_forecast,
     "stand": today.strftime("%Y-%m-%d")
 }
-with open('frontend/src/assets/data.json', 'w') as f:
-    json.dump(data_dict, f)
+
+save_data(data_dict)
 
