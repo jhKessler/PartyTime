@@ -1,4 +1,5 @@
 <ng-container *ngIf="statsService.data">
+  <div class="stats-title">Summe der Impfungen abhängig vom Wochentag</div>
   <div>
     <canvas baseChart
             [datasets]="[{ data: statsService.data.impfungen_nach_wochentag, backgroundColor: 'rgba(255,255,255,0.5)' }]"
