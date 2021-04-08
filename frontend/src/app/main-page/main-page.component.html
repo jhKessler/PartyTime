@@ -1,4 +1,4 @@
-<div>
+<!--<div>
   <canvas baseChart width="400" height="400"
           [datasets]="lineChartData"
           [labels]="lineChartLabels"
@@ -8,9 +8,9 @@
           [chartType]="lineChartType"
           [plugins]="lineChartPlugins">
   </canvas>
-</div>
-<div style="text-align: center" class="main-text">
+</div>-->
+<div style="text-align: center" class="main-text" *ngIf="statsService.data">
   In Deutschland werden voraussichtlich am<br/>
-  <span class="final-date">01.01.1111</span><br/>
+  <span class="final-date">{{statsService.data.genug_leute_geimpft}}</span><br/>
   75% Menschen geimpft sein!
 </div>

@@ -41,6 +41,6 @@ data_dict = {
     "genug_leute_geimpft": alle_geimpft
 }
 
-with open('data.json', 'w') as f:
+with open('frontend/src/assets/data.json', 'w') as f:
     json.dump(data_dict, f)
 

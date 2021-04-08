@@ -1,7 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-
-import { ChartDataSets, ChartOptions } from 'chart.js';
-import { Color, Label } from 'ng2-charts';
+import {Component, OnInit} from '@angular/core';
+import {StatsService} from "../stats.service";
 
 @Component({
   selector: 'app-main-page',
@@ -10,7 +8,7 @@ import { Color, Label } from 'ng2-charts';
 })
 export class MainPageComponent implements OnInit {
 
-  public lineChartData: ChartDataSets[] = [
+  /*public lineChartData: ChartDataSets[] = [
     { data: [65, 59, 80, 81, 56, 55, 40], label: 'Series A' },
   ];
   public lineChartLabels: Label[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
@@ -39,12 +37,12 @@ export class MainPageComponent implements OnInit {
   ];
   public lineChartLegend = true;
   public lineChartType = 'line';
-  public lineChartPlugins = [];
+  public lineChartPlugins = [];*/
 
-  constructor() { }
+  constructor(public statsService: StatsService) {
+  }
 
   ngOnInit(): void {
-
 
   }
 

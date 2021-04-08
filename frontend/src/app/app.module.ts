@@ -7,6 +7,7 @@ import {RouterModule} from '@angular/router';
 import {StatsPageComponent} from './stats-page/stats-page.component';
 import {MomentModule} from 'ngx-moment';
 import {ChartsModule} from 'ng2-charts';
+import {HttpClientModule} from "@angular/common/http";
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import {ChartsModule} from 'ng2-charts';
     BrowserModule,
     MomentModule,
     ChartsModule,
+    HttpClientModule,
     RouterModule.forRoot([
       {
         path: '',
@@ -33,4 +35,5 @@ import {ChartsModule} from 'ng2-charts';
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}
