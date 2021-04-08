@@ -1,6 +1,7 @@
 import csv
 import requests
 import pandas as pd
+import numpy as np
 import io
 import datetime
 import json
@@ -37,6 +38,7 @@ num_days = monthrange(int(last_year), int(last_month))[1]
 num_days_in = len(data.loc[data["unique_month_nr"] == nach_monat[-1][0]])
 month_estimation = int((nach_monat[-1][1] / num_days_in) * num_days)
 nach_monat[-1][1] = month_estimation
+_, nach_monat = zip(*nach_monat)
 
 # get vaccinations of last 7 days
 last_seven_days = data.iloc[-7:]
@@ -55,6 +57,19 @@ td = datetime.timedelta(days=impfdosen_übrig // int(last_seven_days_avg))
 today = datetime.date.today()
 alle_geimpft = (today + td).strftime("%Y-%m-%d")
 
+# find best fit line to estimate vaccination progression
+coeffs = np.polyfit(range(len(nach_monat)), nach_monat, deg=2)
+polyn = np.poly1d(coeffs)
+# forecast with best fit line (this is very speculative dont take it too seriously)
+geimpft = 0
+best_fit_func = []
+for i in range(100):
+    best_fit_func.append(polyn(i))
+    geimpft += polyn(i)
+    if geimpft > impfdosen_insgm:
+        break
+best_fit_func[0] = 0
+
 # save data to json
 data_dict = {
     "last_seven_days_total" : int(last_seven_days_total),
@@ -67,7 +82,8 @@ data_dict = {
     "impfdosen_uebrig": int(impfdosen_übrig),
     "genug_leute_geimpft": alle_geimpft,
     "impfungen_nach_wochentag_avg": list(nach_wochentag),
-    "impfungen_nach_monat": nach_monat
+    "impfungen_nach_monat": nach_monat,
+    "impf_forecast": best_fit_func
 }
 with open('frontend/src/assets/data.json', 'w') as f:
     json.dump(data_dict, f)
