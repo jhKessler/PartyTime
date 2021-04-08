@@ -27,7 +27,7 @@ impfdosen_übrig = impfdosen_insgm - verabreicht
 
 td = datetime.timedelta(days=impfdosen_übrig // int(last_seven_days_avg))
 today = datetime.date.today()
-alle_geimpft = (today + td).strftime("%d/%m/%y")
+alle_geimpft = (today + td).strftime("%Y-%m-%d")
 
 data_dict = {
     "last_seven_days_total" : int(last_seven_days_total),
