@@ -61,8 +61,8 @@ def main():
             week_cnt = isoweek.Week.last_week_of_year(year).week
         if line_val > impfdosen_insgm:
             break
-    # make prediction on when herd immunity is reached
-    alle_geimpft = datetime.datetime.strptime(best_fit_func_weeks[-1] + "-1", "%U-%Y-%w").strftime("%Y-%m-%d")
+    # make prediction on when herd immunity is reached (2 weeks for effect to kick in)
+    alle_geimpft = (datetime.datetime.strptime(best_fit_func_weeks[-1] + "-1", "%U-%Y-%w") + datetime.timedelta(days=14)).strftime("%Y-%m-%d")
     best_fit_func[0] = 0
 
     # save data to json
