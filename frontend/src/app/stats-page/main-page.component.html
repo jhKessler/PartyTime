@@ -1,14 +1,14 @@
 <ng-container *ngIf="statsService.data">
-  <div class="stats-title">Summe der Impfungen abhängig vom Wochentag</div>
-  <div>
-    <canvas baseChart
-            [datasets]="[{ data: statsService.data.impfungen_nach_wochentag, backgroundColor: 'rgba(255,255,255,0.5)' }]"
-            [labels]="barChartLabels"
-            [options]="barChartOptions"
-            [chartType]="barChartType">
+  <div style="display: block;">
+    <canvas baseChart width="300"
+            [datasets]="[{data: statsService.data.impfungen_nach_monat, label: 'Tatsächliche Impfungen'}, {data: statsService.data.impf_forecast, label: 'Modeliert'}]"
+            [labels]="statsService.data.impf_forecast_monate"
+            [options]="lineChartOptions"
+            [chartType]="lineChartType">
     </canvas>
   </div>
-  <div style="text-align: center; margin-top: 50px;" class="main-text">
+
+  <div style="text-align: center; margin-top: 50px;padding: 0 20px" class="main-text">
     <div>Diskotheken öffnen in</div>
     <div class="final-date">{{daysLeft(statsService.data.wann_genug_leute_geimpft)}} Tagen</div>
     <div class="small-text">
@@ -17,4 +17,5 @@
       <br/>Auf der <span style="cursor:Pointer" routerLink="stats">Statistik</span> Seite kannst du zurückverfolgen wie dieser Wert berechnet wurde.
     </div>
   </div>
+
 </ng-container>

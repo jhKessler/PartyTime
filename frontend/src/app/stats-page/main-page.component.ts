@@ -1,18 +1,16 @@
 import {Component} from '@angular/core';
 import {StatsService} from "../stats.service";
-import * as moment from 'moment'
-
-import {ChartOptions, ChartType} from 'chart.js';
-import {Label} from 'ng2-charts';
+import {ChartOptions, ChartType} from "chart.js";
+import * as moment from "moment";
 
 @Component({
-  selector: 'app-main-page',
+  selector: 'app-stats-page',
   templateUrl: './main-page.component.html',
   styleUrls: ['./main-page.component.scss']
 })
 export class MainPageComponent {
 
-  public barChartOptions: ChartOptions = {
+  public lineChartOptions: ChartOptions = {
     responsive: true,
     scales: {
       xAxes: [{
@@ -30,15 +28,18 @@ export class MainPageComponent {
       }]
     },
     legend: {
-      display: false
+      display: true,
+      labels: {
+        fontColor: 'white'
+      }
     },
     defaultColor: 'red'
   };
-  public barChartLabels: Label[] = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
-  public barChartType: ChartType = 'bar';
+  public lineChartType: ChartType = 'line';
 
   constructor(public statsService: StatsService) {
   }
+
 
   daysLeft(date: Date) {
     return moment(date).diff(moment(), 'days');

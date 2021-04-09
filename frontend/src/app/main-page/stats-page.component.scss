@@ -1,7 +1,19 @@
+.stats-title{
+  text-align: center;
+}
+
+
+
+
+
+
+
+
 .stats-list {
   display: flex;
   flex-direction: column;
   width: 500px;
+  padding: 0px 20px;
 
   .stats-entry {
     display: flex;
@@ -19,7 +31,7 @@
       }
 
       .subtitle {
-
+        font-size: 13px;
       }
     }
 

@@ -12,6 +12,8 @@
   justify-content: space-between;
 
   color: white;
+
+  overflow-y:auto;
 }
 
 @keyframes gradient {
@@ -55,7 +57,9 @@
 
 .footer {
   width: 100%;
-  font-size: 12px;
+  font-size: 14px;
+  display: flex;
+  justify-content: space-between;
 
   a {
     color: white;

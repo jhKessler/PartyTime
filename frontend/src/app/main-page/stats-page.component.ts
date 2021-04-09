@@ -1,16 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import {Component} from '@angular/core';
 import {StatsService} from "../stats.service";
-import {ChartOptions, ChartType} from "chart.js";
-import {Label} from "ng2-charts";
+import * as moment from 'moment'
+
+import {ChartOptions, ChartType} from 'chart.js';
+import {Label} from 'ng2-charts';
 
 @Component({
-  selector: 'app-stats-page',
+  selector: 'app-main-page',
   templateUrl: './stats-page.component.html',
   styleUrls: ['./stats-page.component.scss']
 })
-export class StatsPageComponent implements OnInit {
+export class StatsPageComponent {
 
-  public lineChartOptions: ChartOptions = {
+  public barChartOptions: ChartOptions = {
     responsive: true,
     scales: {
       xAxes: [{
@@ -28,18 +30,14 @@ export class StatsPageComponent implements OnInit {
       }]
     },
     legend: {
-      display: true,
-      labels: {
-        fontColor: 'white'
-      }
+      display: false
     },
     defaultColor: 'red'
   };
-  public lineChartType: ChartType = 'line';
+  public barChartLabels: Label[] = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
+  public barChartType: ChartType = 'bar';
 
-  constructor(public statsService: StatsService) { }
-
-  ngOnInit(): void {
+  constructor(public statsService: StatsService) {
   }
 
 }
