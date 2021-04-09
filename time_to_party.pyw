@@ -6,6 +6,7 @@ import io
 import datetime
 import json
 from calendar import monthrange
+import isoweek
 
 URL = 'https://impfdashboard.de/static/data/germany_vaccinations_timeseries_v2.tsv'
 
@@ -65,30 +66,20 @@ data = load_data(URL)
 data["weekday"] = pd.to_datetime(data["date"]).dt.weekday
 nach_wochentag = data.groupby("weekday")["dosen_differenz_zum_vortag"].sum().astype(int)
 
-# group by month
-# get unique id for month
-data["month_nr"] = pd.to_datetime(data["date"]).dt.month.astype(str)
-data["year"] = data["date"].str.split("-").map(lambda x: x[0])
-data["unique_month_nr"] = data[["month_nr", "year"]].agg("-".join, axis=1)
+# get unique id for week and year
+data["date"] = pd.to_datetime(data["date"], format="%Y-%m-%d")
+data["week_nr"] = data["date"].dt.isocalendar().week.astype(str)
+data["year"] = data["date"].dt.year.astype(str)
+data["unique_week_nr"] = data["date"].dt.strftime('%U-%Y')
 
-# get vaccinations per month
-nach_monat = dict(data.groupby("unique_month_nr")["dosen_differenz_zum_vortag"].sum())
-nach_monat = sorted(nach_monat.items(), key=sort_months_fn)
-for i in range(len(nach_monat)):
-    nach_monat[i] = list(nach_monat[i])
-    nach_monat[i][1] = int(nach_monat[i][1])
-
-# last month may not be over yet, estimate month by simple rule of three
-last_month, last_year = nach_monat[-1][0].split("-")
-num_days = monthrange(int(last_year), int(last_month))[1]
-num_days_in = len(data.loc[data["unique_month_nr"] == nach_monat[-1][0]])
-month_estimation = int((nach_monat[-1][1] / num_days_in) * num_days)
-nach_monat[-1][1] = month_estimation
-
-# build list with all months that we have
-monate_data, nach_monat = zip(*nach_monat)
-all_months = get_month_list()
-monate_data_format = format_month_strings(monate_data, all_months)
+# get vaccinations per week
+nach_woche = dict(data.groupby("unique_week_nr")["dosen_kumulativ"].max())
+nach_woche = sorted(nach_woche.items(), key=sort_months_fn)
+# format list dtype
+for i in range(len(nach_woche)):
+    nach_woche[i] = list(nach_woche[i])
+    nach_woche[i][1] = int(nach_woche[i][1])
+wochen, nach_woche = zip(*nach_woche)
 
 # get vaccinations of last 7 days
 last_seven_days = data.iloc[-7:]
@@ -96,7 +87,7 @@ dosen_insgesamt = data.iloc[-1]["dosen_kumulativ"]
 last_seven_days_total = last_seven_days["dosen_differenz_zum_vortag"].sum()
 last_seven_days_avg = last_seven_days_total // 7
 
-# calculate how long it takes to vaccinate to herd immunity if vaccination rate stays like last 7 days
+# misc stats
 einw = 83000000
 impfrate_herdenimmunität = 0.75
 herdenimmunität_anz = einw * impfrate_herdenimmunität
@@ -105,31 +96,29 @@ verabreicht = data["dosen_kumulativ"].max()
 impfdosen_übrig = impfdosen_insgm - verabreicht
 
 # find best fit line to estimate vaccination progression
-coeffs = np.polyfit(range(len(nach_monat)), nach_monat, deg=2)
+coeffs = np.polyfit(range(len(nach_woche)), nach_woche, deg=2)
 polyn = np.poly1d(coeffs)
 # forecast with best fit line (this is very speculative dont take it too seriously)
 geimpft = 0
 best_fit_func = []
+best_fit_func_weeks = []
+week, year = wochen[0].split("-")
+week = int(week)
+year = int(year)
+week_cnt = isoweek.Week.last_week_of_year(year).week
 for i in range(100):
-    best_fit_func.append(int(polyn(i)))
-    geimpft += polyn(i)
-    if geimpft > impfdosen_insgm:
-        break
-
-max_year = data["year"].astype(int).max()
-monate_data_forecast = ["Dezember 2020"]
-month_cnt = 0
-year = 2021
-for i in range(1, len(best_fit_func)):
-    month_num = i % 12
-    if i % 12 == 0:
-        month_num = 12
+    line_val = int(polyn(i))
+    best_fit_func.append(line_val)
+    best_fit_func_weeks.append((str(week) + "-" + str(year)))
+    week += 1
+    if week > week_cnt:
         year += 1
-    monate_data_forecast.append(all_months[str(month_num)] + " " + str(year))
-today = datetime.date.today()
-max_month = month_num
+        week = 0
+        week_cnt = isoweek.Week.last_week_of_year(year).week
+    if line_val > impfdosen_insgm:
+        break
 # make prediction
-alle_geimpft = datetime.date(max_year, month_num, 15).strftime("%Y-%m-%d")
+alle_geimpft = datetime.datetime.strptime(best_fit_func_weeks[-1] + "-1", "%U-%Y-%w").strftime("%Y-%m-%d")
 best_fit_func[0] = 0
 
 # save data to json
@@ -144,11 +133,10 @@ data_dict = {
     "impfdosen_uebrig": int(impfdosen_übrig),
     "wann_genug_leute_geimpft": alle_geimpft,
     "impfungen_nach_wochentag": list(nach_wochentag),
-    "impfungen_nach_monat": nach_monat,
-    "impfungen_nach_monat_monate": monate_data_format,
+    "impfungen_nach_woche": nach_woche,
     "impf_forecast": best_fit_func,
-    "impf_forecast_monate": monate_data_forecast,
-    "stand": today.strftime("%Y-%m-%d")
+    "impf_forecast_wochen": best_fit_func_weeks,
+    "stand": datetime.datetime.today().strftime("%Y-%m-%d")
 }
 
 save_data(data_dict)
