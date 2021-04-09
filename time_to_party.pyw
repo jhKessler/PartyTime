@@ -1,14 +1,14 @@
+import requests
+import pandas as pd
+import numpy as np
+import datetime
+import isoweek
+from utils import load_data, save_data, scrape_inhabitants, sort_fn
+
 def main():
-    import requests
-    import pandas as pd
-    import numpy as np
-    import datetime
-    import isoweek
-    from utils import load_data, save_data, scrape_inhabitants, sort_fn
+    """write vaccination data to json file"""
+    data = load_data()
 
-    URL = 'https://impfdashboard.de/static/data/germany_vaccinations_timeseries_v2.tsv'
-
-    data = load_data(URL)
     # group by weekday
     data["weekday"] = pd.to_datetime(data["date"]).dt.weekday
     nach_wochentag = data.groupby("weekday")["dosen_differenz_zum_vortag"].sum().astype(int)
@@ -50,6 +50,7 @@ def main():
     week = int(wochen[0].split("-")[0])
     year = int(wochen[0].split("-")[1])
     week_cnt = isoweek.Week.last_week_of_year(year).week
+    # predict months until herd immunity count is met
     for i in range(100):
         line_val = int(polyn(i))
         best_fit_func.append(line_val)
@@ -63,7 +64,6 @@ def main():
             break
     # make prediction on when herd immunity is reached (2 weeks for effect to kick in)
     alle_geimpft = (datetime.datetime.strptime(best_fit_func_weeks[-1] + "-1", "%U-%Y-%w") + datetime.timedelta(days=14)).strftime("%Y-%m-%d")
-    best_fit_func[0] = 0
 
     # save data to json
     data_dict = {
@@ -84,7 +84,6 @@ def main():
         "stand": datetime.datetime.today().strftime("%Y-%m-%d"),
         "impf_fortschritt_prozent": int((dosen_insgesamt / impfdosen_insgm) * 100)
     }
-
     save_data(data_dict)
 
 

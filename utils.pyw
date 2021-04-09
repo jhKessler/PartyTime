@@ -5,10 +5,11 @@ import json
 import io
 from bs4 import BeautifulSoup
 
-def load_data(url: str):
+def load_data():
     """Loads data from url"""
+    URL = 'https://impfdashboard.de/static/data/germany_vaccinations_timeseries_v2.tsv'
     with requests.Session() as s:
-        download = s.get(url)
+        download = s.get(URL)
         decoded_content = download.content.decode('utf-8')
         data = pd.read_csv(io.StringIO(decoded_content), delimiter="\t")
     return data
