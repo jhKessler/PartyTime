@@ -27,7 +27,7 @@ def scrape_inhabitants():
 def save_data(data: dict):
     """Save data to json file"""
     with open('frontend/src/assets/data.json', 'w') as f:
-        json.dump(data, f)
+        json.dump(data, f, indent=4)
 
 def sort_fn(tpl: tuple):
     """sort fn for week-strings"""
