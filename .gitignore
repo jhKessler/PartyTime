@@ -1,3 +1,4 @@
 frontend/src/assets/data.json
 __pycache__/
 .vscode
+.idea
