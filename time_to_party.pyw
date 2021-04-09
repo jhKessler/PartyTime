@@ -8,13 +8,14 @@ from utils import load_data, save_data, scrape_inhabitants, sort_fn
 def main():
     """write vaccination data to json file"""
     data = load_data()
+    # convert date column to datetime objects
+    data["date"] = pd.to_datetime(data["date"], format="%Y-%m-%d")
 
     # group by weekday
-    data["weekday"] = pd.to_datetime(data["date"]).dt.weekday
+    data["weekday"] = data["date"].dt.weekday
     nach_wochentag = data.groupby("weekday")["dosen_differenz_zum_vortag"].sum().astype(int)
 
     # get unique id for week and year
-    data["date"] = pd.to_datetime(data["date"], format="%Y-%m-%d")
     data["unique_week_nr"] = data["date"].dt.strftime('%U-%Y')
 
     # get vaccinations per week
@@ -24,14 +25,13 @@ def main():
     for i in range(len(nach_woche)):
         nach_woche[i] = list(nach_woche[i])
         nach_woche[i][1] = int(nach_woche[i][1])
+    # unpack tuple of shape [*, 2] to two 1d arrays
     wochen, nach_woche = zip(*nach_woche)
 
     # get vaccinations of last 7 days
     last_seven_days = data.iloc[-7:]
     last_seven_days_total = last_seven_days["dosen_differenz_zum_vortag"].sum()
     last_seven_days_avg = last_seven_days_total // 7
-    # get total vaccinations
-    dosen_insgesamt = data.iloc[-1]["dosen_kumulativ"]
 
     # misc stats
     einw = scrape_inhabitants()
@@ -73,7 +73,7 @@ def main():
         "impfrate_herdenimmunitaet": impfrate_herdenimmunität,
         "menschen_fuer_herdenimmunitaet": int(herdenimmunität_anz),
         "dosen_fuer_herdenimmunitaet": int(impfdosen_insgm),
-        "impfdosen_bisher": int(dosen_insgesamt),
+        "impfdosen_bisher": int(verabreicht),
         "impfdosen_uebrig": int(impfdosen_übrig),
         "wann_genug_leute_geimpft": alle_geimpft,
         "impfungen_nach_wochentag": list(nach_wochentag),
@@ -82,7 +82,7 @@ def main():
         "impf_forecast": best_fit_func,
         "impf_forecast_kalenderwochen": best_fit_func_weeks,
         "stand": datetime.datetime.today().strftime("%Y-%m-%d"),
-        "impf_fortschritt_prozent": int((dosen_insgesamt / impfdosen_insgm) * 100)
+        "impf_fortschritt_prozent": int((verabreicht / impfdosen_insgm) * 100)
     }
     save_data(data_dict)
 
