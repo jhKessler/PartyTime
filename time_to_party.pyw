@@ -1,11 +1,7 @@
-import csv
 import requests
 import pandas as pd
 import numpy as np
-import io
 import datetime
-import json
-from calendar import monthrange
 import isoweek
 from utils import *
 
@@ -38,7 +34,7 @@ last_seven_days_total = last_seven_days["dosen_differenz_zum_vortag"].sum()
 last_seven_days_avg = last_seven_days_total // 7
 
 # misc stats
-einw = 83000000
+einw = scrape_inhabitants()
 impfrate_herdenimmunität = 0.75
 herdenimmunität_anz = einw * impfrate_herdenimmunität
 impfdosen_insgm = herdenimmunität_anz * 2
