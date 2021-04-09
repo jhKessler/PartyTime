@@ -78,8 +78,9 @@ def main():
         "wann_genug_leute_geimpft": alle_geimpft,
         "impfungen_nach_wochentag": list(nach_wochentag),
         "impfungen_nach_woche": nach_woche,
+        "impfungen_nach_woche_kalenderwochen": best_fit_func_weeks[:len(nach_woche)],
         "impf_forecast": best_fit_func,
-        "impf_forecast_wochen": best_fit_func_weeks,
+        "impf_forecast_kalenderwochen": best_fit_func_weeks,
         "stand": datetime.datetime.today().strftime("%Y-%m-%d")
     }
 
