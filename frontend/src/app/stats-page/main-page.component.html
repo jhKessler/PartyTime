@@ -1,5 +1,6 @@
 <ng-container *ngIf="statsService.data">
   <div style="display: block;">
+    <div style="text-align: center;margin-bottom:10px">Gesamtimpfungen nach Woche mit Prognose</div>
     <canvas baseChart width="300"
             [datasets]="[{data: statsService.data.impfungen_nach_woche, label: 'Tatsächliche Impfungen'}, {data: statsService.data.impf_forecast, label: 'Modeliert'}]"
             [labels]="statsService.data.impf_forecast_kalenderwochen"
