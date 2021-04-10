@@ -7,12 +7,14 @@ import {RouterModule} from '@angular/router';
 import {MainPageComponent} from './stats-page/main-page.component';
 import {ChartsModule} from 'ng2-charts';
 import {HttpClientModule} from "@angular/common/http";
+import { ProgressbarComponent } from './progressbar/progressbar.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     StatsPageComponent,
-    MainPageComponent
+    MainPageComponent,
+    ProgressbarComponent
   ],
   imports: [
     BrowserModule,

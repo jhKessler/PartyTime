@@ -1,8 +1,8 @@
 <ng-container *ngIf="statsService.data">
   <div style="display: block;">
     <canvas baseChart width="300"
-            [datasets]="[{data: statsService.data.impfungen_nach_monat, label: 'Tatsächliche Impfungen'}, {data: statsService.data.impf_forecast, label: 'Modeliert'}]"
-            [labels]="statsService.data.impf_forecast_monate"
+            [datasets]="[{data: statsService.data.impfungen_nach_woche, label: 'Tatsächliche Impfungen'}, {data: statsService.data.impf_forecast, label: 'Modeliert'}]"
+            [labels]="statsService.data.impf_forecast_kalenderwochen"
             [options]="lineChartOptions"
             [chartType]="lineChartType">
     </canvas>

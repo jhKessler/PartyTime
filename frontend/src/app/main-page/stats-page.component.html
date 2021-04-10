@@ -32,4 +32,9 @@
     </div>
   </div>
 
+  <div style="font-size:10px;margin-top: 30px;padding: 0 30px">
+    Aktuell sind {{statsService.data.impf_fortschritt_prozent}}% Menschen in Deutschland geimpft
+    <app-progressbar [percent]="statsService.data.impf_fortschritt_prozent"></app-progressbar>
+  </div>
+
 </ng-container>
