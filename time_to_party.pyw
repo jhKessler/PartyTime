@@ -124,7 +124,8 @@ def main():
         "impfungen_nach_woche_kalenderwochen": best_fit_func_weeks[:len(nach_woche)],
         "impf_forecast": best_fit_func,
         "impf_forecast_kalenderwochen": best_fit_func_weeks,
-        "stand": scrape_status_date(),
+        "stand": datetime.date.today().strftime("%Y-%m-%d"),
+        "last_data_update": scrape_status_date(),
         "impf_fortschritt_prozent": int((verabreicht / impfdosen_insgm) * 100)
     }
     save_data(data_dict)
