@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import datetime
 import isoweek
-from utils import load_data, save_data, scrape_inhabitants, sort_fn
+from utils import *
 
 def main():
     """write vaccination data to json file"""
@@ -81,7 +81,7 @@ def main():
         "impfungen_nach_woche_kalenderwochen": best_fit_func_weeks[:len(nach_woche)],
         "impf_forecast": best_fit_func,
         "impf_forecast_kalenderwochen": best_fit_func_weeks,
-        "stand": datetime.datetime.today().strftime("%Y-%m-%d"),
+        "stand": scrape_status_date(),
         "impf_fortschritt_prozent": int((verabreicht / impfdosen_insgm) * 100)
     }
     save_data(data_dict)

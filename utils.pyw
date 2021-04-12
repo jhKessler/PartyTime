@@ -25,6 +25,15 @@ def scrape_inhabitants():
     einw_zahl = int(str(td_tags.prettify()).splitlines()[1].replace(".", ""))
     return einw_zahl
 
+def scrape_status_date():
+    """Scrapes date the data was last updated"""
+    URL = "https://impfdashboard.de/daten"
+    r = requests.get(URL).text
+    soup = BeautifulSoup(r, features="lxml")
+    sveltes = soup.find(class_="date").text
+    stand = sveltes.split("Stand: ")[1]
+    return stand
+
 def save_data(data: dict):
     """Save data to json file"""
     with open('frontend/src/assets/data.json', 'w') as f:
