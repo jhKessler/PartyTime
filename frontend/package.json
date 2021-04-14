@@ -20,6 +20,7 @@
     "@angular/platform-browser-dynamic": "~10.1.4",
     "@angular/router": "~10.1.4",
     "chart.js": "^2.9.4",
+    "human-readable-numbers": "^0.9.5",
     "moment": "^2.29.1",
     "ng2-charts": "^2.4.2",
     "rxjs": "~6.6.0",
