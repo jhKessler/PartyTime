@@ -70,6 +70,7 @@ def main():
         nach_woche[i][1] = int(nach_woche[i][1])
     # drop last week if its not complete yet
     this_week = data[data["unique_week_nr"] == nach_woche[-1][0]]
+    vaccinations_this_week = int(this_week["dosen_differenz_zum_vortag"].sum())
     if len(this_week) < 7:
         del nach_woche[-1]
     # unpack tuple of shape [*, 2] to two 1d arrays
@@ -129,7 +130,8 @@ def main():
         "impf_forecast_kalenderwochen": best_fit_func_weeks,
         "stand": datetime.date.today().strftime("%Y-%m-%d"),
         "last_data_update": scrape_status_date(),
-        "impf_fortschritt_prozent": int((verabreicht / impfdosen_insgm) * 100)
+        "impf_fortschritt_prozent": int((verabreicht / impfdosen_insgm) * 100),
+        "impdosen_verabreicht_diese_woche": vaccinations_this_week
     }
     save_data(data_dict)
 
