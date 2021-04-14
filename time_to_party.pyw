@@ -68,9 +68,12 @@ def main():
     for i in range(len(nach_woche)):
         nach_woche[i] = list(nach_woche[i])
         nach_woche[i][1] = int(nach_woche[i][1])
+    # drop last week if its not complete yet
+    this_week = data[data["unique_week_nr"] == nach_woche[-1][0]]
+    if len(this_week) < 7:
+        del nach_woche[-1]
     # unpack tuple of shape [*, 2] to two 1d arrays
     wochen, nach_woche = zip(*nach_woche)
-
     # get vaccinations of last 7 days
     last_seven_days = data.iloc[-7:]
     last_seven_days_total = last_seven_days["dosen_differenz_zum_vortag"].sum()
