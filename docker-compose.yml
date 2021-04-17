@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  partytime_postgres:
+    image: postgres
+    volumes:
+      - partytime:/var/lib/postgresql/data
+    ports:
+      - 127.0.0.1:5432:5432
+    environment:
+      - 'POSTGRES_USER=partytime'
+      - 'POSTGRES_DB=partytime'
+      - 'POSTGRES_ENCODING=UNICODE'
+      - 'POSTGRES_HOST_AUTH_METHOD=trust'
+      - 'POSTGRES_COLLATE=C'
+      - 'POSTGRES_COLLATE_TYPE=C'
+    logging:
+      # limit logs retained on host to 25MB
+      driver: "json-file"
+      options:
+        max-size: "500k"
+        max-file: "50"
+volumes:
+  partytime:
+    external: false
