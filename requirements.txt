@@ -1,0 +1,7 @@
+pandas
+bs4
+numpy 
+requests
+isoweek
+pony
+io
