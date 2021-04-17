@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import requests
 from pony import orm
 import json
+import io
 
 def load_data():
     """Loads data from url"""

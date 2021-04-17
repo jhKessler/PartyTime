@@ -1,13 +1,9 @@
-import requests
 import pandas as pd
 import numpy as np
 import datetime
 import isoweek
 import csv
-import json
-import io
-from bs4 import BeautifulSoup
-from pony import orm
+from utils import *
 
 def main():
     """write vaccination data to json file"""
