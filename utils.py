@@ -35,11 +35,6 @@ def scrape_status_date():
     stand = sveltes.split("Stand: ")[1]
     return stand
 
-def save_data(new_data: dict):
-    """Save data to json file"""
-    with open('frontend/src/assets/data.json', 'r+') as f:
-        save_history(new_data["last_data_update"], new_data["impf_forecast_kalenderwochen"], new_data["impf_forecast"])
-        json.dump(new_data, f, indent=4)
 
 def sort_fn(tpl: tuple):
     """sort fn for week-strings"""

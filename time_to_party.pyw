@@ -4,6 +4,7 @@ import datetime
 import isoweek
 import csv
 from utils import *
+from database import save_history
 
 def main():
     """write vaccination data to json file"""
@@ -91,7 +92,7 @@ def main():
         "impdosen_verabreicht_diese_woche": vaccinations_this_week
     }
 
-    save_data(data_dict)
+    save_history(data_dict)
 
 if __name__ == "__main__":
     main()
