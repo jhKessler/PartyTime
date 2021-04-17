@@ -90,8 +90,8 @@ def main():
         "impf_fortschritt_prozent": int((verabreicht / impfdosen_insgm) * 100),
         "impdosen_verabreicht_diese_woche": vaccinations_this_week
     }
-    save_data(data_dict)
 
+    save_data(data_dict)
 
 if __name__ == "__main__":
     main()
