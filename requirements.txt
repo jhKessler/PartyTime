@@ -4,4 +4,5 @@ numpy
 requests
 isoweek
 pony
-io
+lxml
+psycopg2

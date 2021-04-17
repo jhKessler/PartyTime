@@ -14,6 +14,6 @@ export class StatsService {
   }
 
   updateData() {
-    this.http.get<DataModel>('/assets/data.json').subscribe(res => this.data = res);
+    this.http.get<DataModel>('/data').subscribe(res => this.data = res);
   }
 }
