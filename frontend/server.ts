@@ -2,22 +2,23 @@ const express = require('express');
 const app = express();
 const port = 5000;
 
+
+const host = process.env.database_host ? process.env.database_host : 'localhost'
 const Pool = require('pg').Pool;
 const pool = new Pool({
   user: 'partytime',
-  host: 'localhost',
+  host: host,
   port: 5432,
   database: 'partytime'
 });
+
+console.log(`connecting to db ${host}`);
 
 app.use(express.static(__dirname + '/dist/frontend/'));
 
 app.get('/data', (request, response) => {
   pool.query('select * from history', (err, res) => {
-    if(err){
-      throw err
-    }
-    if(res.rows.length == 0){
+    if (err || res.rows.length == 0) {
       response.status(500).json({'error': 'no data'});
       return;
     }

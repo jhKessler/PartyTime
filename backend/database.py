@@ -1,7 +1,10 @@
 from pony import orm
+import os
+
+database_host = 'localhost' if not 'database_host' in os.environ else os.environ['database_host']
 
 db = orm.Database()
-db.bind(provider='postgres', user="partytime", host="localhost", database="partytime")
+db.bind(provider='postgres', user="partytime", host=database_host, database="partytime")
 
 class History(db.Entity):
     """Database Object for saving the Prediction History"""

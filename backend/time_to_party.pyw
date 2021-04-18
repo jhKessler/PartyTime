@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import pandas as pd
 import numpy as np
 import datetime
@@ -5,6 +7,7 @@ import isoweek
 import csv
 from utils import *
 from database import save_history
+
 
 def main():
     """write vaccination data to json file"""

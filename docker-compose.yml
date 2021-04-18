@@ -20,6 +20,12 @@ services:
       options:
         max-size: "500k"
         max-file: "50"
+    networks:
+      - partytime
 volumes:
   partytime:
     external: false
+networks:
+  partytime:
+    driver: bridge
+    name: partytime
