@@ -1,13 +1,18 @@
 #!/usr/bin/python
+print(1)
 
-import pandas as pd
-import numpy as np
-import datetime
-import isoweek
-import csv
-from utils import *
-from database import save_history
+try:
+    import pandas as pd
+    import numpy as np
+    import datetime
+    import isoweek
+    import csv
+    from utils import *
+    from database import save_history
+except Exception as e:
+    print(e)
 
+print(2)
 
 def main():
     """write vaccination data to json file"""
@@ -97,5 +102,4 @@ def main():
 
     save_history(data_dict)
 
-if __name__ == "__main__":
-    main()
+main()
