@@ -19,13 +19,10 @@ COPY startup.sh /app
 #install crontab
 RUN apt-get update
 RUN apt-get install cron rsyslog -y
-RUN service rsyslog start
 
 RUN echo "0 14 * * * root cd /app && bash startup.sh" >> /etc/cron.d/update-data
 RUN chmod 0644 /etc/cron.d/update-data
-RUN service cron start
 
 ENV database_host=partytime_postgres
 
-ENTRYPOINT service cron start && bash /app/startup.sh && node server.ts
-#ENTRYPOINT ["/bin/bash"]
+ENTRYPOINT service cron start && service rsyslog start && bash /app/startup.sh && node server.ts
