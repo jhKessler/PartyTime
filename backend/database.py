@@ -13,10 +13,8 @@ class History(db.Entity):
 
 db.generate_mapping(create_tables=True)
 
-def save_history(data_dict: dict):
+def save_history(date: str, data_dict: dict):
     """Saves history data to Database"""
-    date = data_dict["last_data_update"]
-    del data_dict["last_data_update"]
     with orm.db_session:
         sql_qry = f"select count(1) from History where date = $date;"
         if db.select(sql_qry)[0] == 0:

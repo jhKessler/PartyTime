@@ -52,7 +52,7 @@ def main():
     # forecast with best fit line
     best_fit_func = []
     best_fit_func_weeks = []
-    week = int(wochen[0].split("-")[0])
+    week = int(wochen[0].split("-")[0]) - 1
     year = int(wochen[0].split("-")[1])
     week_cnt = isoweek.Week.last_week_of_year(year).week
     # predict months until herd immunity count is met
@@ -69,7 +69,7 @@ def main():
             break
     # make prediction on when herd immunity is reached (2 weeks for effect to kick in)
     alle_geimpft = (datetime.datetime.strptime(best_fit_func_weeks[-1] + "-1", "%U-%Y-%w") + datetime.timedelta(days=14)).strftime("%Y-%m-%d")
-
+    print(best_fit_func_weeks)
     # save data to json
     data_dict = {
         "last_seven_days_total" : int(last_seven_days_total),
@@ -87,11 +87,10 @@ def main():
         "impf_forecast": best_fit_func,
         "impf_forecast_kalenderwochen": best_fit_func_weeks,
         "stand": datetime.date.today().strftime("%Y-%m-%d"),
-        "last_data_update": scrape_status_date(),
         "impf_fortschritt_prozent": int((verabreicht / impfdosen_insgm) * 100),
         "impdosen_verabreicht_diese_woche": vaccinations_this_week
     }
 
-    save_history(data_dict)
+    save_history(scrape_status_date(), data_dict)
 
 main()

@@ -4,7 +4,6 @@ import requests
 from pony import orm
 import json
 import io
-from database import save_history
 
 def load_data():
     """Loads data from url"""
