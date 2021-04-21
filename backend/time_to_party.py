@@ -18,7 +18,6 @@ def main():
 
     # get unique id for week and year
     data["unique_week_nr"] = data["date"].dt.strftime('%U-%Y')
-
     # get vaccinations per week
     nach_woche = dict(data.groupby("unique_week_nr")["dosen_kumulativ"].max())
     nach_woche = sorted(nach_woche.items(), key=sort_fn)
@@ -30,7 +29,10 @@ def main():
     this_week = data[data["unique_week_nr"] == nach_woche[-1][0]]
     vaccinations_this_week = int(this_week["dosen_differenz_zum_vortag"].sum())
     if len(this_week) < 7:
+        data = data[data["unique_week_nr"] != nach_woche[-1][0]]
         del nach_woche[-1]
+    # remove incomplete row from data
+    
     # unpack tuple of shape [*, 2] to two 1d arrays
     wochen, nach_woche = zip(*nach_woche)
     # get vaccinations of last 7 days
@@ -67,9 +69,23 @@ def main():
             week_cnt = isoweek.Week.last_week_of_year(year).week
         if line_val > impfdosen_insgm:
             break
+
+    # get start date and end date of each week
+    week_start = data.groupby("unique_week_nr")["date"].min().dt.strftime("%d.%m.%Y")
+    week_end = data.groupby("unique_week_nr")["date"].max().dt.strftime("%d.%m.%Y")
+    week_str = week_start.str.cat(week_end, sep=" - ")
+    week_str = sorted(dict(week_str).items(), key=sort_fn)
+    _, week_str = zip(*week_str)
+    week_str = list(week_str)
+
+    # get weeks that have not happened yet
+    last_week_start = datetime.datetime.strptime(week_str[-1].split(" - ")[0], "%d.%m.%Y")
+    for i in range(len(best_fit_func_weeks) - len(week_str)):
+        last_week_start = last_week_start + datetime.timedelta(days=7)
+        last_week_end = last_week_start + datetime.timedelta(days=6)
+        week_str.append(last_week_start.strftime("%d.%m.%Y") + " - " + last_week_end.strftime("%d.%m.%Y"))
     # make prediction on when herd immunity is reached (2 weeks for effect to kick in)
     alle_geimpft = (datetime.datetime.strptime(best_fit_func_weeks[-1] + "-1", "%U-%Y-%w") + datetime.timedelta(days=14)).strftime("%Y-%m-%d")
-    print(best_fit_func_weeks)
     # save data to json
     data_dict = {
         "last_seven_days_total" : int(last_seven_days_total),
@@ -88,7 +104,8 @@ def main():
         "impf_forecast_kalenderwochen": best_fit_func_weeks,
         "stand": datetime.date.today().strftime("%Y-%m-%d"),
         "impf_fortschritt_prozent": int((verabreicht / impfdosen_insgm) * 100),
-        "impdosen_verabreicht_diese_woche": vaccinations_this_week
+        "impdosen_verabreicht_diese_woche": vaccinations_this_week,
+        "week_start_end" : week_str
     }
 
     save_history(scrape_status_date(), data_dict)
