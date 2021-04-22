@@ -13,8 +13,9 @@
     <div class="final-date">{{daysLeft(statsService.data.wann_genug_leute_geimpft)}} Tagen</div>
     <div class="small-text">
       Am {{statsService.data.wann_genug_leute_geimpft | date:'dd.MM.y'}} sollten mit einer Herdenimmunität von {{statsService.data.impfrate_herdenimmunitaet * 100}}% und den
-      aktuellen Impfzahlen die Clubs wieder öffnen. <small>(Stand {{statsService.data.stand | date: 'dd.MM.y'}})</small><br/>
-      <br/>Auf der <span style="cursor:Pointer" routerLink="stats">Statistik</span> Seite kannst du zurückverfolgen wie dieser Wert berechnet wurde.
+      aktuell ansteigenden Impfzahlen die Clubs wieder öffnen. <small>(Stand {{statsService.data.stand | date: 'dd.MM.y'}})</small><br/>
+      Dieses Datum beinhaltet 2 Wochen, die es braucht, bis die Impfungen wirken.<br/>
+      <br/>Auf der <span style="cursor:Pointer" routerLink="stats">Statistik</span> Seite stehen weitere Zahlen.
     </div>
   </div>
 

@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {StatsService} from "../stats.service";
 import {ChartOptions, ChartType} from "chart.js";
 import * as moment from "moment";
@@ -9,7 +9,7 @@ import * as HRN from 'human-readable-numbers'
   templateUrl: './main-page.component.html',
   styleUrls: ['./main-page.component.scss']
 })
-export class MainPageComponent {
+export class MainPageComponent implements OnInit {
 
   public lineChartOptions: ChartOptions = {
     responsive: true,
@@ -39,12 +39,6 @@ export class MainPageComponent {
     },
     tooltips: {
       callbacks: {
-        title(item: Chart.ChartTooltipItem[], data: Chart.ChartData): string | string[] {
-          const label = item[0].label
-          const weeknumber = parseInt(label.split('-')[0]);
-          const year = parseInt(label.split('-')[1]);
-          return moment(new Date(year, 0, (1 + weeknumber - 1) * 7)).format('DD.MM.YYYY') + ' - ' + moment(new Date(year, 0, ((1 + weeknumber - 1) * 7) + 7)).format('DD.MM.YYYY');
-        },
         afterLabel(tooltipItem: Chart.ChartTooltipItem, data: Chart.ChartData): string | string[] {
           return [
             'Formatiert: ' + HRN.toHumanString(tooltipItem.value)
@@ -59,9 +53,14 @@ export class MainPageComponent {
   constructor(public statsService: StatsService) {
   }
 
-
   daysLeft(date: Date) {
     return moment(date).diff(moment(), 'days');
+  }
+
+  ngOnInit() {
+    this.lineChartOptions.tooltips.callbacks.title = ((item, data) => {
+      return this.statsService.data.week_start_end[item[0].index];
+    });
   }
 
 }

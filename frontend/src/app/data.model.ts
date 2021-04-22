@@ -14,5 +14,6 @@ export interface DataModel{
   impf_forecast: number[],
   impf_forecast_kalenderwochen: string[],
   stand: Date,
-  impf_fortschritt_prozent: number
+  impf_fortschritt_prozent: number,
+  week_start_end: string[]
 }

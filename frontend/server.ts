@@ -1,4 +1,6 @@
 const express = require('express');
+const cors = require('cors');
+
 const app = express();
 const port = 5000;
 
@@ -13,6 +15,8 @@ const pool = new Pool({
 });
 
 console.log(`connecting to db ${host}`);
+
+app.use(cors());
 
 app.use(express.static(__dirname + '/dist/frontend/'));
 
