@@ -56,7 +56,7 @@ def main():
     # forecast with best fit line
     best_fit_func = []
     best_fit_func_weeks = []
-    week = int(wochen[0].split("-")[0]) - 1
+    week = int(wochen[0].split("-")[0]) + 1
     year = int(wochen[0].split("-")[1])
     week_cnt = isoweek.Week.last_week_of_year(year).week
     # predict months until herd immunity count is met
@@ -71,7 +71,6 @@ def main():
             week_cnt = isoweek.Week.last_week_of_year(year).week
         if line_val > impfdosen_insgm:
             break
-
     # get start date and end date of each week
     week_start = data.groupby("unique_week_nr")["date"].min().dt.strftime("%d.%m.%Y")
     week_end = data.groupby("unique_week_nr")["date"].max().dt.strftime("%d.%m.%Y")
@@ -79,7 +78,7 @@ def main():
     week_str = sorted(dict(week_str).items(), key=sort_fn)
     _, week_str = zip(*week_str)
     week_str = list(week_str)
-
+    print(list(zip(best_fit_func_weeks, week_str)))
     # get weeks that have not happened yet
     last_week_start = datetime.datetime.strptime(week_str[-1].split(" - ")[0], "%d.%m.%Y")
     for i in range(len(best_fit_func_weeks) - len(week_str)):
@@ -89,6 +88,7 @@ def main():
     # make prediction on when herd immunity is reached (2 weeks for effect to kick in)
     alle_geimpft = (datetime.datetime.strptime(best_fit_func_weeks[-1] + "-1", "%U-%Y-%w") + datetime.timedelta(days=14)).strftime("%Y-%m-%d")
     # save data to json
+    print(alle_geimpft)
     data_dict = {
         "last_seven_days_total" : int(last_seven_days_total),
         "last_seven_days_avg" : int(last_seven_days_avg),
