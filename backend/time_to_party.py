@@ -88,7 +88,6 @@ def main():
     # make prediction on when herd immunity is reached (2 weeks for effect to kick in)
     alle_geimpft = (datetime.datetime.strptime(best_fit_func_weeks[-1] + "-1", "%U-%Y-%w") + datetime.timedelta(days=14)).strftime("%Y-%m-%d")
     # save data to json
-    print(alle_geimpft)
     data_dict = {
         "last_seven_days_total" : int(last_seven_days_total),
         "last_seven_days_avg" : int(last_seven_days_avg),
