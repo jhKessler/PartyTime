@@ -78,7 +78,7 @@ def main():
     week_str = sorted(dict(week_str).items(), key=sort_fn)
     _, week_str = zip(*week_str)
     week_str = list(week_str)
-    print(list(zip(best_fit_func_weeks, week_str)))
+    
     # get weeks that have not happened yet
     last_week_start = datetime.datetime.strptime(week_str[-1].split(" - ")[0], "%d.%m.%Y")
     for i in range(len(best_fit_func_weeks) - len(week_str)):
