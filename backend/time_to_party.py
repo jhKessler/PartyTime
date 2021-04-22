@@ -28,6 +28,15 @@ def main():
     # drop last week if its not complete yet
     this_week = data[data["unique_week_nr"] == nach_woche[-1][0]]
     vaccinations_this_week = int(this_week["dosen_differenz_zum_vortag"].sum())
+
+    # misc stats
+    einw = scrape_inhabitants()
+    impfrate_herdenimmunität = 0.75
+    herdenimmunität_anz = einw * impfrate_herdenimmunität
+    impfdosen_insgm = herdenimmunität_anz * 2
+    verabreicht = data["dosen_kumulativ"].max()
+    impfdosen_übrig = impfdosen_insgm - verabreicht
+
     if len(this_week) < 7:
         data = data[data["unique_week_nr"] != nach_woche[-1][0]]
         del nach_woche[-1]
@@ -40,13 +49,6 @@ def main():
     last_seven_days_total = last_seven_days["dosen_differenz_zum_vortag"].sum()
     last_seven_days_avg = last_seven_days_total // 7
 
-    # misc stats
-    einw = scrape_inhabitants()
-    impfrate_herdenimmunität = 0.75
-    herdenimmunität_anz = einw * impfrate_herdenimmunität
-    impfdosen_insgm = herdenimmunität_anz * 2
-    verabreicht = data["dosen_kumulativ"].max()
-    impfdosen_übrig = impfdosen_insgm - verabreicht
 
     # find best fit line to estimate vaccination progression
     coeffs = np.polyfit(range(len(nach_woche)), nach_woche, deg=2)
