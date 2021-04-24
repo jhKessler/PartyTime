@@ -11,7 +11,7 @@ def main():
 
     # load data
     data = load_data()
-
+    verabreicht = data["dosen_kumulativ"].max()     
     # convert date column to datetime objects
     data["date"] = pd.to_datetime(data["date"], format="%Y-%m-%d")
 
@@ -34,6 +34,7 @@ def main():
     # drop last week if its not complete yet
     this_week = data[data["unique_week_nr"] == nach_woche[-1][0]]
     vaccinations_this_week = int(this_week["dosen_differenz_zum_vortag"].sum())
+    
     if len(this_week) < 7:
         # remove incomplete row from data
         data = data[data["unique_week_nr"] != nach_woche[-1][0]]
@@ -44,7 +45,6 @@ def main():
     impfrate_herdenimmunität = 0.75
     herdenimmunität_anz = einw * impfrate_herdenimmunität
     impfdosen_insgm = herdenimmunität_anz * 2
-    verabreicht = data["dosen_kumulativ"].max()
     impfdosen_übrig = impfdosen_insgm - verabreicht
 
     wochen, nach_woche = zip(*nach_woche)
