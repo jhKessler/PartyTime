@@ -33,7 +33,6 @@ def main():
 
     # drop last week if its not complete yet
     this_week = data[data["unique_week_nr"] == nach_woche[-1][0]]
-    vaccinations_this_week = int(this_week["dosen_differenz_zum_vortag"].sum())
     
     if len(this_week) < 7:
         # remove incomplete row from data
@@ -48,11 +47,6 @@ def main():
     impfdosen_übrig = impfdosen_insgm - verabreicht
 
     wochen, nach_woche = zip(*nach_woche)
-
-    # get vaccinations of last 7 days
-    last_seven_days = data.iloc[-7:]
-    last_seven_days_total = last_seven_days["dosen_differenz_zum_vortag"].sum()
-    last_seven_days_avg = last_seven_days_total // 7
 
     # find best fit line to estimate vaccination progression
     coeffs = np.polyfit(range(len(nach_woche)), nach_woche, deg=2)
@@ -71,10 +65,12 @@ def main():
         best_fit_func.append(line_val)
         best_fit_func_weeks.append((str(week) + "-" + str(year)))
         week += 1
+
         if week > week_cnt:
             year += 1
             week = 0
             week_cnt = isoweek.Week.last_week_of_year(year).week
+
         if line_val > impfdosen_insgm:
             break
 
@@ -97,8 +93,6 @@ def main():
     alle_geimpft = (datetime.datetime.strptime(best_fit_func_weeks[-1] + "-1", "%U-%Y-%w") + datetime.timedelta(days=14)).strftime("%Y-%m-%d")
     # save data to json
     data_dict = {
-        "last_seven_days_total" : int(last_seven_days_total),
-        "last_seven_days_avg" : int(last_seven_days_avg),
         "einwohner_deutschland": int(einw),
         "impfrate_herdenimmunitaet": impfrate_herdenimmunität,
         "menschen_fuer_herdenimmunitaet": int(herdenimmunität_anz),
@@ -113,7 +107,6 @@ def main():
         "impf_forecast_kalenderwochen": best_fit_func_weeks,
         "stand": datetime.date.today().strftime("%Y-%m-%d"),
         "impf_fortschritt_prozent": int((verabreicht / impfdosen_insgm) * 100),
-        "impdosen_verabreicht_diese_woche": vaccinations_this_week,
         "week_start_end" : week_str
     }
     update_time = scrape_status_date()
