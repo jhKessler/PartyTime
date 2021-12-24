@@ -5,7 +5,9 @@ Prognostizierung und Darstellung des Impffortschritts in der Bundesrepublik Deut
 
 
 ## Wie funktioniert die Prognostizierung?
-Die Prognostizierung läuft über eine sogenannte "Best-Fit-Line", der Algorithmus sucht automatisch eine Funktion, welche die bisherige Impfentwicklung möglichst genau modelliert. Durch einsetzen zukünftiger Daten in diese Funktion, kann man eine Vorraussage für die Zukunft machen
+Die Prognostizierung läuft über eine sogenannte "Best-Fit-Line", der Algorithmus sucht automatisch eine Funktion, welche die bisherige Impfentwicklung möglichst genau modelliert. Durch einsetzen zukünftiger Daten in diese Funktion, kann man eine Vorraussage der Impfzahlen für die Zukunft machen.
+Mit dieser Vorraussage und einer Schätzung der benötigten Impfquote für eine Herdenimmunität kann man ein vorraussichtliches Datum prognostizieren, an dem Discotheken wieder aufmachen.
+
 ### Run docker image
 1. ```docker-compose up -d```
 2. ``docker build -t partytime .``
