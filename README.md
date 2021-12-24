@@ -1,7 +1,7 @@
 # [PartyTime](https://jhkessler.github.io/PartyTime/)
 ![](partytime_image.png)
 
-Prognostizierung und Darstellung des Impffortschritts in der Bundesrepublik Deutschland.
+# Prognostizierung und Darstellung des Impffortschritts in der Bundesrepublik Deutschland.
 
 
 ## Wie funktioniert die Prognostizierung?
